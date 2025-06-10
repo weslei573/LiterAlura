@@ -5,15 +5,32 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "pesquisas")
+@Table(name = "livros")
 public class Result {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private List<Auto> authors;
     private List<String> languages;
     private Integer download_count;
+
+    @ManyToOne
+    @JoinColumn(name = "autor_id")
+    private Autor autor;
+
+    public Result(DadosBuscado dadosBuscado) {
+        this.title = dadosBuscado.title();
+        this.languages = dadosBuscado.languages();
+        this.download_count = dadosBuscado.download_count();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -21,14 +38,6 @@ public class Result {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<Auto> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<Auto> authors) {
-        this.authors = authors;
     }
 
     public List<String> getLanguages() {
@@ -45,5 +54,21 @@ public class Result {
 
     public void setDownload_count(Integer download_count) {
         this.download_count = download_count;
+    }
+
+    public Autor getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Autor autor) {
+        this.autor = autor;
+    }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                " - title='" + title +
+                " - download_count=" + download_count +
+                " - languages=" + languages + '}';
     }
 }

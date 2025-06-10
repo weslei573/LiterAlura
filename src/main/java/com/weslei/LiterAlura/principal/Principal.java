@@ -1,6 +1,6 @@
 package com.weslei.LiterAlura.principal;
 
-import com.weslei.LiterAlura.model.Autor;
+import com.weslei.LiterAlura.model.DadosAutor;
 import com.weslei.LiterAlura.model.DadosLivro;
 import com.weslei.LiterAlura.service.ConsumoApi;
 import com.weslei.LiterAlura.service.ConverteDados;
@@ -87,7 +87,7 @@ public class Principal {
                 System.out.println("\nTítulo: " + l.title());
                 System.out.println("Autor(es): " +
                         l.authors().stream()
-                                .map(Autor::name)
+                                .map(DadosAutor::name)
                                 .collect(Collectors.joining(", ")));
                 System.out.println("Idioma: " + l.languages());
                 System.out.println("Downloads: " + l.download_count());
