@@ -18,18 +18,19 @@ public class Result {
     @JoinColumn(name = "autor_id")
     private Autor autor;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "livro_idiomas", joinColumns = @JoinColumn(name = "livro_id"))
     @Column(name = "idioma")
     private List<String> idiomas;
     private Integer download_count;
 
-    public Result(){}
+    public Result() {
+    }
 
     public Result(DadosBuscado dadosBuscado) {
         this.title = dadosBuscado.title();
-        if (!dadosBuscado.authors().isEmpty()){
-            this.autor = new Autor(dadosBuscado.authors().get(0));
+        if (!dadosBuscado.authors().isEmpty()) {
+            //this.autor = new Autor(dadosBuscado.authors().get(0));
         }
         this.idiomas = dadosBuscado.languages();
         this.download_count = dadosBuscado.download_count();
