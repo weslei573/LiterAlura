@@ -10,17 +10,28 @@ public class Result {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private List<String> languages;
-    private Integer download_count;
 
-    @ManyToOne
+    @Column(unique = true, nullable = false)
+    private String title;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "autor_id")
     private Autor autor;
 
+    @ElementCollection
+    @CollectionTable(name = "livro_idiomas", joinColumns = @JoinColumn(name = "livro_id"))
+    @Column(name = "idioma")
+    private List<String> idiomas;
+    private Integer download_count;
+
+    public Result(){}
+
     public Result(DadosBuscado dadosBuscado) {
         this.title = dadosBuscado.title();
-        this.languages = dadosBuscado.languages();
+        if (!dadosBuscado.authors().isEmpty()){
+            this.autor = new Autor(dadosBuscado.authors().get(0));
+        }
+        this.idiomas = dadosBuscado.languages();
         this.download_count = dadosBuscado.download_count();
     }
 
@@ -40,12 +51,12 @@ public class Result {
         this.title = title;
     }
 
-    public List<String> getLanguages() {
-        return languages;
+    public List<String> getIdiomas() {
+        return idiomas;
     }
 
-    public void setLanguages(List<String> languages) {
-        this.languages = languages;
+    public void setIdiomas(List<String> idiomas) {
+        this.idiomas = idiomas;
     }
 
     public Integer getDownload_count() {
@@ -68,7 +79,8 @@ public class Result {
     public String toString() {
         return "Result{" +
                 " - title='" + title +
+                " - autor='" + (autor != null ? autor.getName() : "N/A") +
                 " - download_count=" + download_count +
-                " - languages=" + languages + '}';
+                " - languages=" + idiomas + '}';
     }
 }

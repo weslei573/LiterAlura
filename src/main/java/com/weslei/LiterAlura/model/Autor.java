@@ -13,20 +13,20 @@ public class Autor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
-    private Integer birth_year;
-    private Integer death_year;
+    private Integer anoNascimento;
+    private Integer anoMorte;
 
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    // Supondo que em Livro você tenha um campo 'autor'
     private List<Result> results = new ArrayList<>();
 
     public Autor() {}
 
     public Autor(DadosAutor dadosAutor) {
         this.name = dadosAutor.name();
-        this.birth_year = dadosAutor.birth_year();
-        this.death_year = dadosAutor.death_year();
+        this.anoNascimento = dadosAutor.birth_year();
+        this.anoMorte = dadosAutor.death_year();
     }
 
     public Long getId() {
@@ -45,20 +45,20 @@ public class Autor {
         this.name = name;
     }
 
-    public Integer getBirth_year() {
-        return birth_year;
+    public Integer getAnoNascimento() {
+        return anoNascimento;
     }
 
-    public void setBirth_year(Integer birth_year) {
-        this.birth_year = birth_year;
+    public void setAnoNascimento(Integer anoNascimento) {
+        this.anoNascimento = anoNascimento;
     }
 
-    public Integer getDeath_year() {
-        return death_year;
+    public Integer getAnoMorte() {
+        return anoMorte;
     }
 
-    public void setDeath_year(Integer death_year) {
-        this.death_year = death_year;
+    public void setAnoMorte(Integer anoMorte) {
+        this.anoMorte = anoMorte;
     }
 
     public List<Result> getResults() {
@@ -66,13 +66,19 @@ public class Autor {
     }
 
     public void setResults(List<Result> results) {
+        results.forEach(l -> l.setAutor(this));
         this.results = results;
+    }
+
+    public void adicionarResult(Result result) {
+        this.results.add(result);
+        result.setAutor(this);
     }
 
     @Override
     public String toString() {
         return "Autor: " + name +
-                " death_year: " + death_year +
-                ", birth_year: " + birth_year;
+                ", Ano Nascimento: " + anoNascimento +
+                ", Ano Morte: " + (anoMorte != null ? anoMorte : "N/A");
     }
 }
