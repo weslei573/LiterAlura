@@ -5,24 +5,15 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "livros")
-public class Livro {
+@Table(name = "pesquisas")
+public class Result {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
-
-    // Para coleções de objetos embutidos (como Autor)
-    @ElementCollection
-    @CollectionTable(name = "autores", joinColumns = @JoinColumn(name = "livro_id"))
     private List<Auto> authors;
-
-    // Para coleções de tipos básicos (como String)
-    @ElementCollection
     private List<String> languages;
-
-    private Integer downloadCount;
+    private Integer download_count;
 
     public String getTitle() {
         return title;
@@ -48,11 +39,11 @@ public class Livro {
         this.languages = languages;
     }
 
-    public Integer getDownloadCount() {
-        return downloadCount;
+    public Integer getDownload_count() {
+        return download_count;
     }
 
-    public void setDownloadCount(Integer downloadCount) {
-        this.downloadCount = downloadCount;
+    public void setDownload_count(Integer download_count) {
+        this.download_count = download_count;
     }
 }
