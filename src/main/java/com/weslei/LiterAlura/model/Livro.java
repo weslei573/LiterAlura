@@ -1,10 +1,17 @@
 package com.weslei.LiterAlura.model;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 public class Livro {
     private List<Result> results;
+
+    public List<Result> getResults() {
+        return results;
+    }
+
+    public void setResults(List<Result> results) {
+        this.results = results;
+    }
 
     public static class Result {
         private String title;
@@ -43,19 +50,17 @@ public class Livro {
         public void setDownload_count(Integer download_count) {
             this.download_count = download_count;
         }
-
-        public static class Autor{
-            private String name;
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
-        }
     }
 
+    public static class Autor {
+        private String name;
 
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
 }

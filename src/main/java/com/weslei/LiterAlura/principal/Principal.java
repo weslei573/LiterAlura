@@ -1,22 +1,24 @@
 package com.weslei.LiterAlura.principal;
 
-import com.weslei.LiterAlura.model.DadosAutor;
+import com.weslei.LiterAlura.model.Autor;
+import com.weslei.LiterAlura.model.DadosLivro;
 import com.weslei.LiterAlura.service.ConsumoApi;
 import com.weslei.LiterAlura.service.ConverteDados;
 
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
     private Scanner leitura = new Scanner(System.in);
     private ConsumoApi consumo = new ConsumoApi();
-    private ConverteDados converte = new ConverteDados();
+    private ConverteDados conversor = new ConverteDados();
 
-    private final String ENDERECO = "https://gutendex.com/books?search=";
+    private final String GUTENDEX_API = "https://gutendex.com/books/?search=";
 
     public void exibeMenu() {
         var opcao = -1;
 
-        while (opcao != 0){
+        while (opcao != 0) {
             var menu = """
                     ---------------------------------------------
                     Escolha o número de sua opção:
@@ -34,7 +36,7 @@ public class Principal {
             System.out.println(menu);
             opcao = leitura.nextInt();
             leitura.nextLine();
-            
+
             switch (opcao) {
                 case 1:
                     buscarLivroPeloTitulo();
@@ -61,11 +63,38 @@ public class Principal {
     }
 
     private void buscarLivroPeloTitulo() {
-        System.out.println("Insira o nome do livro que você deseja procurar");
-        var nome = leitura.nextLine();
-        var json = consumo.obterDados(ENDERECO + nome.replace(" ", "%20"));
-        DadosAutor dados = converte.obterDados(json, DadosAutor.class);
-        System.out.println(dados);
+        System.out.println("Digite o título do livro para busca: ");
+        var tituloLivro = leitura.nextLine();
+
+        try {
+            var tituloCodificado = tituloLivro.replace(" ", "%20");
+            var json = consumo.obterDados(GUTENDEX_API + tituloCodificado);
+
+            if (json == null) {
+                System.out.println("Não foi possível obter dados da API. Verifique sua conexão.");
+                return;
+            }
+
+            DadosLivro dadosLivros = conversor.obterDados(json, DadosLivro.class);
+            //System.out.println(dadosLivros.results());
+
+            if (dadosLivros.results().isEmpty()) {
+                System.out.println("Nenhum livro encontrado com esse título.");
+                return;
+            }
+
+            dadosLivros.results().forEach(l -> {
+                System.out.println("\nTítulo: " + l.title());
+                System.out.println("Autor(es): " +
+                        l.authors().stream()
+                                .map(Autor::name)
+                                .collect(Collectors.joining(", ")));
+                System.out.println("Idioma: " + l.languages());
+                System.out.println("Downloads: " + l.download_count());
+            });
+        } catch (Exception e) {
+            System.out.println("Ocorreu um erro: " + e.getMessage());
+        }
 
     }
 
