@@ -8,10 +8,8 @@ import com.weslei.LiterAlura.service.ConverteDados;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class Principal {
@@ -22,10 +20,13 @@ public class Principal {
     private final String GUTENDEX_API = "https://gutendex.com/books/?search=";
     private List<DadosBuscado> dadosBuscados = new ArrayList<>();
 
+    private List<Result> results = new ArrayList<>();
+    private List<Autor> autores = new ArrayList<>();
+
     private ResultRepository resultRepository;
     private AutorRepository autorRepository;
 
-    public Principal(ResultRepository resultRepository, AutorRepository autorRepository){
+    public Principal(ResultRepository resultRepository, AutorRepository autorRepository) {
         this.resultRepository = resultRepository;
         this.autorRepository = autorRepository;
     }
@@ -143,14 +144,65 @@ public class Principal {
     }
 
     private void listarLivrosRegistrados() {
+        results = resultRepository.findAll();
+        if (results.isEmpty()) {
+            System.out.println("Nenhum livro registrado ainda.");
+        } else {
+            results.stream().forEach(System.out::println);
+        }
     }
 
     private void listarAutoresRegistrados() {
+        autores = autorRepository.findAll();
+        if (autores.isEmpty()) {
+            System.out.println("Nenhum autor resgitrado.");
+        } else {
+            autores.forEach(a -> {
+                System.out.println(a);
+
+                System.out.println("Livros:  " + a.getResults().stream()
+                        .map(Result::getTitle)
+                        .collect(Collectors.joining(", ")) + "\n");
+
+            });
+        }
     }
 
     private void listarAutoresVivos() {
+        System.out.println("Digite o ano para verificar autores vivos: ");
+        var ano = leitura.nextInt();
+        leitura.nextLine();
+
+        List<Autor> autorVivo = autorRepository.findByAnoNascimentoLessThanEqualAndAnoMorteGreaterThanEqual(ano, ano);
+        autorVivo.addAll(autorRepository.findByAnoNascimentoLessThanEqualAndAnoMorteIsNull(ano));
+
+        if (autorVivo.isEmpty()){
+            System.out.println("Nenhum autor vivo encontrado no ano " + ano + ".");
+        } else {
+            System.out.println("\n ------ Autor Vivo em " + ano + "------");
+            autorVivo.forEach(System.out::println);
+        }
     }
 
     private void listarEmDeterminadoIdioma() {
+        System.out.println("""
+                Digite o idioma para busca: 
+                es - espanhol
+                en - inglês
+                fr - francês
+                pt - português
+                """);
+        var idioma = leitura.nextLine();
+
+        List<Result> livrosPorIdioma = resultRepository.findAll().stream()
+                .filter(r -> r.getIdiomas() != null && r.getIdiomas().contains(idioma.toLowerCase()))
+                .collect(Collectors.toList());
+
+        if (livrosPorIdioma.isEmpty()){
+            System.out.println(" Não existem livros nesse idioma '" + idioma + "' no banco de dados.");
+        } else {
+            System.out.println("\n ------ Livros no idioma " + idioma + "------");
+            livrosPorIdioma.forEach(System.out::println);
+        }
     }
 }

@@ -78,10 +78,11 @@ public class Result {
 
     @Override
     public String toString() {
-        return "Result{" +
-                " - title='" + title +
-                " - autor='" + (autor != null ? autor.getName() : "N/A") +
-                " - download_count=" + download_count +
-                " - languages=" + idiomas + '}';
+        return "------- LIVRO -------" + "\n" +
+                " Titulo: " + title + "\n" +
+                " Autor: " + (autor != null ? autor.getName() : "N/A") + "\n" +
+                " Downloads: " + download_count + "\n" +
+                " Idioma: " + idiomas + "\n" +
+                "-------------------" + "\n\n";
     }
 }
