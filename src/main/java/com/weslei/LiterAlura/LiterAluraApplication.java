@@ -1,8 +1,6 @@
 package com.weslei.LiterAlura;
 
 import com.weslei.LiterAlura.principal.Principal;
-import com.weslei.LiterAlura.repository.AutorRepository;
-import com.weslei.LiterAlura.repository.ResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

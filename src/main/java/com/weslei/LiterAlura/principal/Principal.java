@@ -79,7 +79,7 @@ public class Principal {
 
     @Transactional
     private void buscarLivroPeloTitulo() {
-        System.out.println("Digite o título do livro para busca: ");
+        System.out.println("Insira o nome do livro que vocẽ deseja procurar: ");
         var tituloLivro = leitura.nextLine();
 
         Optional<Result> resultExistente = resultRepository.findByTitleContainsIgnoreCase(tituloLivro);

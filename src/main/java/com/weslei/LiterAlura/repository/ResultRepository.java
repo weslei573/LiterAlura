@@ -1,6 +1,5 @@
 package com.weslei.LiterAlura.repository;
 
-import com.weslei.LiterAlura.model.DadosBuscado;
 import com.weslei.LiterAlura.model.Result;
 import org.springframework.data.jpa.repository.JpaRepository;
 
